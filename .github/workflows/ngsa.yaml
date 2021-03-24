@@ -38,9 +38,8 @@ jobs:
       run: |
         git config --global user.email "bartr@microsoft.com"
         git config --global user.name bartr
-        git clone ${{ secrets.GIT_URL }} who-dat
+        git clone https://git:${{ secrets.GHCR_PAT }}@github.com/retaildevcrews/bartr-test who-dat
         cd who-dat
         date >> who.dat
         git commit -am "ci-cd"
         git push
-
