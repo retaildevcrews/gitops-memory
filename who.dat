@@ -1,6 +1,4 @@
 name: ngsa-memory
 owner: ngsa
 targets:
-  - gcp1
   - azure
-  - do
