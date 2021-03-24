@@ -1,10 +1,7 @@
-profiles:
-  - aspnetcore
-owner:
-  group: ngsa
-
-deploy:
+name: ngsa-memory
+owner: ngsa
+targets:
   - azure
-  - gcp
+  - gcp1
   - do
 
