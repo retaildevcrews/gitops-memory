@@ -36,7 +36,7 @@ jobs:
         git config --global user.name bartr
         git clone https://${{ secrets.GHCR_ID }}:${{ secrets.GHCR_PAT }}@github.com/retaildevcrews/bartr-test who-dat
         cd who-dat
-        date >> run.log
+        date >> runlog
         dotnet run
         git add .
         git commit -am "ci-cd"
