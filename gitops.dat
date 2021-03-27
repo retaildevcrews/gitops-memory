@@ -3,4 +3,4 @@ owner: ngsa
 targets:
 #  - azure
 #  - do
-  - gcp1
+  - gcp

@@ -18,6 +18,6 @@ spec:
       - -m
       - --prometheus
       - -z
-      - {{whodat.Config.Zone}}
+      - {{gitops.Config.Zone}}
       - -r
-      - {{whodat.Config.Region}}
+      - {{gitops.Config.Region}}
