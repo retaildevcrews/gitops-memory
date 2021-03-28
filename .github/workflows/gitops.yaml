@@ -1,4 +1,4 @@
-name: Build NGSA-App
+name: Deploy NGSA-Memory
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
 
     runs-on: ubuntu-20.04
     env:
-      DOCKER_REPO: ghcr.io/retaildevcrews/ngsa-app2
+      DOCKER_REPO: ghcr.io/retaildevcrews/ngsa-app
 
     steps:
     - uses: actions/checkout@v2
@@ -31,11 +31,11 @@ jobs:
       run: |
         git config --global user.email "bartr@microsoft.com"
         git config --global user.name bartr
-        git clone https://${{ secrets.GHCR_ID }}:${{ secrets.GHCR_PAT }}@github.com/retaildevcrews/bartr-test gitops
+        git clone https://${{ secrets.GHCR_ID }}:${{ secrets.GHCR_PAT }}@github.com/retaildevcrews/gitops
         cd gitops
         date >> runlog
         dotnet run
         git pull
         git add .
-        git commit -am "ci-cd"
+        git commit -am "gitops ngsa-memory deployment"
         git push
