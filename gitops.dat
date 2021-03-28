@@ -5,5 +5,5 @@ imagetag: beta-0.3.0-0321-0605-24
 
 targets:
   - azure
-#  - do
-#  - gcp
+  - do
+  - gcp
