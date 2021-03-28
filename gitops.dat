@@ -1,9 +1,0 @@
-name: ngsa-memory
-namespace: ngsa
-imagename: ghcr.io/retaildevcrews/ngsa-app
-imagetag: beta
-
-targets:
-  - azure
-  - do
-  - gcp
