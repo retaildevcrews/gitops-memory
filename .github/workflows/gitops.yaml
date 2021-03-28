@@ -37,6 +37,7 @@ jobs:
         
         if [[ $(git status -s) ]]; then
           git pull
+          git status
           git diff
           git add .
           git commit -am "gitops ngsa-memory deployment"
