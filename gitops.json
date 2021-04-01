@@ -1,6 +1,5 @@
 {
     "name": "ngsa-memory",
-    "namespace": "ngsa",
     "imageName": "ghcr.io/retaildevcrews/ngsa-app",
     "imageTag": "beta",
     "targets": [ "azure", "do", "gcp"]
