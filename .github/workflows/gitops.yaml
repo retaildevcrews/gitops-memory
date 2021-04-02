@@ -33,7 +33,7 @@ jobs:
     - name: GitOps Deploy
       run: |
         docker run --rm \
-        -v $PWD:/template ghcr.io/retaildevcrews/autogitops:beta \
+        -v $PWD/gitops:/template ghcr.io/retaildevcrews/autogitops:beta \
         ${{ secrets.GHCR_ID }} \
         ${{ secrets.GHCR_PAT }} \
         /retaildevcrews/gitops
