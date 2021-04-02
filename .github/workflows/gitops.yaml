@@ -6,7 +6,7 @@ on:
       - main
 
     paths:
-    - gitops.*
+    - gitops/**
     - '.github/workflows/gitops.yaml'
 
 jobs:
