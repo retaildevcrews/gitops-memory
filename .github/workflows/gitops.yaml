@@ -27,13 +27,7 @@ jobs:
         username: ${{ secrets.GHCR_ID }}
         password: ${{ secrets.GHCR_PAT }}
 
-    - name: Docker pull
-      run: docker pull ghcr.io/retaildevcrews/autogitops:beta
-
     - name: GitOps Deploy
       run: |
-        docker run --rm \
-        -v $PWD/gitops:/template ghcr.io/retaildevcrews/autogitops:beta \
-        ${{ secrets.GHCR_ID }} \
-        ${{ secrets.GHCR_PAT }} \
-        /retaildevcrews/gitops
+        dotnet tool install -g autogitops
+        ago -u ${{ secrets.GHCR_ID }} -p ${{ secrets.GHCR_PAT }} -r /retaildevcrews/gitops
