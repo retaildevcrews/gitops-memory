@@ -3,7 +3,7 @@ name: Deploy NGSA-Memory in AKS Cluster with a Traefik Controller (AKS Secure Ba
 on:
   push:
     branches:
-      - nudoyen/ngsa-auto-gitops
+      - main
 
     paths:
     - ngsa_autogitops/**
