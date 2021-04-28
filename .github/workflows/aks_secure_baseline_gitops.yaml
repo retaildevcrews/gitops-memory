@@ -1,0 +1,33 @@
+name: Deploy NGSA-Memory in AKS Cluster with a Traefik Controller (AKS Secure Baseline)
+
+on:
+  push:
+    branches:
+      - nudoyen/ngsa-auto-gitops
+
+    paths:
+    - ngsa_autogitops/**
+    - '.github/workflows/aks_secure_baseline_gitops.yaml'
+
+jobs:
+
+  deploy:
+
+    runs-on: ubuntu-20.04
+    env:
+      DOCKER_REPO: ghcr.io/retaildevcrews/tinybench
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Login to Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ secrets.GHCR_ID }}
+        password: ${{ secrets.GHCR_PAT }}
+
+    - name: GitOps Deploy
+      run: |
+        dotnet tool install -g autogitops
+        ago -u ${{ secrets.GHCR_ID }} -p ${{ secrets.GHCR_PAT }} -r /retaildevcrews/gitops -t ngsa_autogitops -o dev-deploy
