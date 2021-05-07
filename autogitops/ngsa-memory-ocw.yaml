@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{gitops.name}}
+  namespace: {{gitops.namespace}}
+  labels:
+    app.kubernetes.io/name: {{gitops.name}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{gitops.name}}
+  template:
+    metadata:
+      labels:
+        app: {{gitops.name}}
+        version: beta-{{gitops.version}}
+        deploy: {{gitops.deploy}}
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+    spec:
+      containers:
+        - name: app
+          image: {{gitops.imageName}}:{{gitops.imageTag}}
+          imagePullPolicy: Always
+
+          args: 
+          - --in-memory
+          - --prometheus
+          - --url-prefix
+          - {{gitops.config.urlprefix}}
+          - --zone
+          - {{gitops.config.zone}}
+          - --region
+          - {{gitops.config.region}}
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+      # Added Node Selector
+      # Since we have two node pools for PnP cluster
+      nodeSelector:
+        agentpool: {{gitops.config.agentpool}}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{gitops.name}}
+  namespace: {{gitops.namespace}}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{gitops.name}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{gitops.name}}-ingress
+  namespace: {{gitops.namespace}}
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    # defines controller implementing this ingress resource: https://docs.microsoft.com/en-us/azure/dev-spaces/how-to/ingress-https-traefik
+    # ingress.class annotation is being deprecated in Kubernetes 1.18: https://kubernetes.io/docs/concepts/services-networking/ingress/#deprecated-annotation
+    # For backwards compatibility, when this annotation is set, precedence is given over the new field ingressClassName under spec.
+    kubernetes.io/ingress.class: traefik-internal
+    # kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.tls.options: default
+    traefik.ingress.kubernetes.io/router.middlewares: {{gitops.config.stripprefix}}
+spec:
+  # ingressClassName: "traefik-internal"
+  tls:
+  - hosts:
+      - {{gitops.config.host}}
+        # it is possible to opt for certificate management strategy with dedicated
+        # certificates for each TLS SNI route.
+        # In this Rereference Implementation for the sake of simplicity we use a
+        # wildcard default certificate added at Ingress Controller configuration level which is *.example.com
+        # secretName: <bu0001a0008-00-example-com-tls-secret>
+  rules:
+  - host: {{gitops.config.host}}
+    http:
+      paths:
+      - path: {{gitops.config.urlprefix}}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{gitops.name}}
+            port:
+              number: 8080
